@@ -14,6 +14,7 @@ public enum TokenType {
     TONUM,
     TOSTR,
     FORMAT,
+    RAND,
 
     PLUS,
     MINUS,

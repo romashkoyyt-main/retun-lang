@@ -1,3 +1,13 @@
-var a = 4;
+/* -- SIMPLE CALCULATOR -- */
 
-if !a == 5 print("A isnt 5");
+/* GETTING VALUES */
+var num1 = toNumber(read("Enter first number: "));
+var operation = read("Enter operation: ");
+var num2 = toNumber(read("Enter second number: "));
+
+/* SHOWING RESULT */
+if operation == '+' print(format("%f + %f = %f", num1, num2, num1 + num2));
+else if operation == '-' print(format("%f - %f = %f", num1, num2, num1 - num2));
+else if operation == '*' print(format("%f * %f = %f", num1, num2, num1 * num2));
+else if operation == '/' print(format("%f / %f = %f", num1, num2, num1 / num2));
+else print("Unknown operator!");

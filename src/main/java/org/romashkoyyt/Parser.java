@@ -288,6 +288,15 @@ public class Parser {
 
             return new ToStringExpression(expr);
         }
+        if (match(TokenType.RAND)) {
+            consume(TokenType.LPAREN);
+            Expression expr1 = expression();
+            consume(TokenType.COM);
+            Expression expr2 = expression();
+            consume(TokenType.RPAREN);
+
+            return new RandExpression(expr1, expr2);
+        }
         if (match(TokenType.NOT)) {
             Expression expr = expression();
             return new ConditionalExpression(expr, new ValueExpression(new BooleanValue(false)), "==");

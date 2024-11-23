@@ -266,6 +266,9 @@ public class Lexer {
         } else if (stringBuilder.toString().equals("false")) {
             tokens.add(new Token(TokenType.FALSE));
             return;
+        } else if (stringBuilder.toString().equals("rand")) {
+            tokens.add(new Token(TokenType.RAND));
+            return;
         }
 
         tokens.add(new Token(TokenType.WORD, stringBuilder.toString()));
