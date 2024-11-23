@@ -1,0 +1,3 @@
+var a = "false";
+
+if a print("a is true");
