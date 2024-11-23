@@ -269,6 +269,12 @@ public class Lexer {
         } else if (stringBuilder.toString().equals("rand")) {
             tokens.add(new Token(TokenType.RAND));
             return;
+        } else if (stringBuilder.toString().equals("and")) {
+            tokens.add(new Token(TokenType.ANDAND));
+            return;
+        } else if (stringBuilder.toString().equals("or")) {
+            tokens.add(new Token(TokenType.OR));
+            return;
         }
 
         tokens.add(new Token(TokenType.WORD, stringBuilder.toString()));

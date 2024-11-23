@@ -47,6 +47,8 @@ public enum TokenType {
     FOREACH,
     COM,
     AND,
+    ANDAND,
+    OR,
     TO,
     DOT,
 

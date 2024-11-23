@@ -114,7 +114,35 @@ public class Parser {
     }
 
     private Expression expression() {
-        return conditional();
+        return logicalOr();
+    }
+
+    private Expression logicalOr() {
+        Expression expr = logicalAnd();
+
+        while (true) {
+            if (match(TokenType.OR)) {
+                expr = new ConditionalExpression(expr, logicalAnd(), "|");
+                continue;
+            }
+            break;
+        }
+
+        return expr;
+    }
+
+    private Expression logicalAnd() {
+        Expression expr = conditional();
+
+        while (true) {
+            if (match(TokenType.ANDAND)) {
+                expr = new ConditionalExpression(expr, conditional(), "&");
+                continue;
+            }
+            break;
+        }
+
+        return expr;
     }
 
     private Expression conditional() {

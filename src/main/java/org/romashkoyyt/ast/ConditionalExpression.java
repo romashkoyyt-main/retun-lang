@@ -67,6 +67,12 @@ public class ConditionalExpression implements Expression {
             case "!=":
                 res = new BooleanValue(value1.asNumber() != value2.asNumber());
                 break;
+            case "&":
+                res = new BooleanValue(value1.asBoolean() && value2.asBoolean());
+                break;
+            case "|":
+                res = new BooleanValue(value1.asBoolean() || value2.asBoolean());
+                break;
             default: res = new BooleanValue(value1.asNumber() == value2.asNumber());
         }
 
