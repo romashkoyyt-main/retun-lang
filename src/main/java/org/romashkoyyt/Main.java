@@ -22,11 +22,12 @@ public class Main {
         }
 
         Parser parser = new Parser(tokens);
-        ArrayList<Statement> expressions = parser.parse();
+        Statement program = parser.parse();
 
-        for (Statement expr : expressions) {
-            expr.execute();
-            if (debug) System.out.println(expr);
+        if (debug) {
+            System.out.println(program);
         }
+
+        program.execute();
     }
 }

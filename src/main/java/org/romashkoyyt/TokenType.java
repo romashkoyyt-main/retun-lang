@@ -42,7 +42,6 @@ public enum TokenType {
     END,
 
     WHILE,
-
     FOR,
     FOREACH,
     COM,
@@ -50,7 +49,12 @@ public enum TokenType {
     ANDAND,
     OR,
     TO,
+    WITH,
     DOT,
+
+    DO,
+    BREAK,
+    CONTINUE,
 
     POWER,
 

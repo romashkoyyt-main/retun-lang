@@ -16,8 +16,8 @@ public class Parser {
         this.length = tokens.size();
     }
 
-    public ArrayList<Statement> parse() {
-        ArrayList<Statement> statements = new ArrayList<>();
+    public Statement parse() {
+        BlockStatement statements = new BlockStatement();
 
         while (!match(TokenType.EOF)) {
             statements.add(statement());
@@ -42,14 +42,78 @@ public class Parser {
         if (match(TokenType.COMMENT)) {
             return new CommentStatement();
         }
+        if (match(TokenType.WHILE)) {
+            return whileStatement();
+        }
+        if (match(TokenType.DO)) {
+            return doWhileStatement();
+        }
+        if (match(TokenType.FOR)) {
+            return forStatement();
+        }
+        if (match(TokenType.BREAK)) {
+            consume(TokenType.SEMICOLON);
+            return new BreakStatement();
+        }
+        if (match(TokenType.CONTINUE)) {
+            consume(TokenType.SEMICOLON);
+            return new ContinueStatement();
+        }
         return assignmentStatement();
+    }
+
+    private Statement doWhileStatement() {
+        Statement statement = statementOrBlock();
+        consume(TokenType.WHILE);
+        Expression expr = expression();
+        consume(TokenType.SEMICOLON);
+        return new DoWhileStatement(expr, statement);
+    }
+
+    private Statement whileStatement() {
+        Expression expr = expression();
+        Statement statement = statementOrBlock();
+        return new WhileStatement(expr, statement);
+    }
+
+    private Statement forStatement() {
+        consume(TokenType.VAR);
+        String name = peek().getValue();
+        consume(TokenType.WORD);
+        consume(TokenType.EQ);
+        Expression expr1 = expression();
+        consume(TokenType.TO);
+        Expression expr2 = expression();
+        Statement incr = null;
+
+        if (match(TokenType.WITH)) {
+            incr = statement();
+        }
+
+        Statement statement = statementOrBlock();
+        return new ForStatement(name, expr1, expr2, incr, statement);
+    }
+
+    private Statement block() {
+        BlockStatement statements = new BlockStatement();
+
+        while (!match(TokenType.END)) {
+            statements.add(statement());
+        }
+
+        return statements;
+    }
+
+    private Statement statementOrBlock() {
+        if (match(TokenType.THEN)) return block();
+        else return statement();
     }
 
     private Statement ifStatement() {
         Expression expr = expression();
-        Statement statement = statement();
+        Statement statement = statementOrBlock();
         if (match(TokenType.ELSE)) {
-            Statement statement2 = statement();
+            Statement statement2 = statementOrBlock();
             return new IfElseStatement(expr, statement, statement2);
         }
 
@@ -63,6 +127,11 @@ public class Parser {
             consume(TokenType.PLUS);
             consume(TokenType.SEMICOLON);
             return new PlusPlusStatement(name);
+        }
+        if (match(TokenType.MINUS)) {
+            consume(TokenType.MINUS);
+            consume(TokenType.SEMICOLON);
+            return new MinusMinusStatement(name);
         }
         consume(TokenType.EQ);
         Expression expr = expression();

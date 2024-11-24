@@ -1,1 +1,17 @@
-var num1 = toNumber(read("Enter first number: ")); var operation = read("Enter operation: "); var num2 = toNumber(read("Enter second number: ")); if operation == '+' print(format("%f + %f = %f", num1, num2, num1 + num2)); else if operation == '-' print(format("%f - %f = %f", num1, num2, num1 - num2)); else if operation == '*' print(format("%f * %f = %f", num1, num2, num1 * num2)); else if operation == '/' print(format("%f / %f = %f", num1, num2, num1 / num2)); else print("Unknown operator!");
+/* -- GUESS NUMBER GAME -- */
+
+var input = toNumber(read("Enter number: "));
+var answer = rand(1, 100);
+
+while (true) {
+    if (input > answer) {
+        print("Number is lower than it.");
+    } else if (input < answer) {
+        print("Number is greater than it.");
+    } else if (input == answer) {
+        break;
+    }
+    input = toNumber(read("Enter number: "));
+}
+
+print("You win!");

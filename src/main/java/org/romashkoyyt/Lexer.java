@@ -115,12 +115,8 @@ public class Lexer {
                 tokens.add(new Token(TokenType.NOT));
                 pos++;
             } else if (current == '.') {
-                if (next() == '.') {
-                    tokens.add(new Token(TokenType.TO));
-                    pos++;
-                } else {
-                    tokens.add(new Token(TokenType.DOT));
-                }
+                tokens.add(new Token(TokenType.DOT));
+                pos++;
             } else {
                 pos++;
             }
@@ -275,6 +271,21 @@ public class Lexer {
         } else if (stringBuilder.toString().equals("or")) {
             tokens.add(new Token(TokenType.OR));
             return;
+        } else if (stringBuilder.toString().equals("to")) {
+            tokens.add(new Token(TokenType.TO));
+            return;
+        } else if (stringBuilder.toString().equals("with")) {
+            tokens.add(new Token(TokenType.WITH));
+            return;
+        } else if (stringBuilder.toString().equals("do")) {
+            tokens.add(new Token(TokenType.DO));
+            return;
+        } else if (stringBuilder.toString().equals("break")) {
+            tokens.add(new Token(TokenType.BREAK));
+            return;
+        } else if (stringBuilder.toString().equals("continue")) {
+            tokens.add(new Token(TokenType.CONTINUE));
+            return;
         }
 
         tokens.add(new Token(TokenType.WORD, stringBuilder.toString()));
@@ -285,7 +296,9 @@ public class Lexer {
         char current = peek();
 
         while (true) {
-            if (!Character.isDigit(current) && current != '.') break;
+            if (!Character.isDigit(current) && current != '.') {
+                break;
+            }
             stringBuilder.append(current);
             current = next();
         }
