@@ -1,7 +1,6 @@
 package org.romashkoyyt.ast;
 
-import org.romashkoyyt.lib.Functions;
-import org.romashkoyyt.lib.Value;
+import org.romashkoyyt.lib.*;
 
 import java.util.ArrayList;
 
@@ -33,6 +32,21 @@ public class FunctionalExpression implements Expression {
             values[i] = arguments.get(i).eval();
         }
 
-        return Functions.get(name).execute(values);
+        final Function function = Functions.get(name);
+        if (function instanceof UserDefineFunction) {
+            final UserDefineFunction userFunction = (UserDefineFunction) function;
+            if (size != userFunction.getArgsCount()) {
+                throw new RuntimeException("Args count mismatch");
+            }
+
+            Variables.push();
+            for (int i = 0; i < size; i++) {
+                Variables.set(userFunction.getArgsName(i), values[i]);
+            }
+            final Value result = userFunction.execute(values);
+            Variables.pop();
+            return result;
+        }
+        return function.execute(values);
     }
 }

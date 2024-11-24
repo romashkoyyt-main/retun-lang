@@ -26,6 +26,24 @@ public class Parser {
         return statements;
     }
 
+    private FunctionDefine functionDefine() {
+        final String name = peek().getValue();
+        consume(TokenType.WORD);
+        final FunctionalExpression function = new FunctionalExpression(name);
+        final ArrayList<String> argNames = new ArrayList<>();
+        consume(TokenType.LPAREN);
+
+        while (!match(TokenType.RPAREN)) {
+            consume(TokenType.VAR);
+            String arg = peek().getValue();
+            consume(TokenType.WORD);
+            argNames.add(arg);
+            match(TokenType.COM);
+        }
+        Statement statement = statementOrBlock();
+        return new FunctionDefine(name, argNames, statement);
+    }
+
     private FunctionalExpression function(String name) {
         final FunctionalExpression function = new FunctionalExpression(name);
 
@@ -60,6 +78,14 @@ public class Parser {
         if (match(TokenType.CONTINUE)) {
             consume(TokenType.SEMICOLON);
             return new ContinueStatement();
+        }
+        if (match(TokenType.RETURN)) {
+            Expression expr = expression();
+            consume(TokenType.SEMICOLON);
+            return new ReturnStatement(expr);
+        }
+        if (match(TokenType.FUNC)) {
+            return functionDefine();
         }
         if (peek().getType() == TokenType.WORD) {
             final String name = peek().getValue();

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Functions {
+public class Functions{
 
     private static final NumberValue ZERO = new NumberValue(0);
     private static final Map<String, Function> functions = new HashMap<>();
@@ -81,6 +81,19 @@ public class Functions {
             public Value execute(Value... args) {
                 for (Value value : args) {
                     System.out.println(value.asString());
+                }
+                return ZERO;
+            }
+        });
+        functions.put("sleep", new Function() {
+            @Override
+            public Value execute(Value... args) {
+                if (args.length != 1) throw new RuntimeException("One argument expected");
+                if (args[0].asNumber() < 0) throw new RuntimeException("Incorrect time");
+                try {
+                    Thread.sleep((long) args[0].asNumber());
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
                 return ZERO;
             }

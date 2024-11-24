@@ -1,17 +1,5 @@
-/* PRINT RANDOM BYTE */
 
-var
-         string         =""
-;
-    for
-        (var i     =1to
- 8
- ){string               =string
-                +rand  (0  ,(1
-            +(  ((
-  0 +(-
-                1+ 1)
-  )                         ))
-  )     );}
-print       (
-       string)        ;
+for var i = 0 to 10 {
+    print(i);
+    sleep(1000);
+}

@@ -9,9 +9,6 @@ public enum TokenType {
     TRUE,
     FALSE,
 
-    /*
-    RAND,*/
-
     PLUS,
     MINUS,
     SLASH,
@@ -58,11 +55,6 @@ public enum TokenType {
     RETURN,
     INCLUDE,
 
-    CLASS,
-    CLOSED,
-    STATIC,
-
-    OBJ,
     TAB,
     COMMENT,
 

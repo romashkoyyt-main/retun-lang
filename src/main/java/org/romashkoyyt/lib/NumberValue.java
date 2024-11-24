@@ -2,6 +2,7 @@ package org.romashkoyyt.lib;
 
 public class NumberValue implements Value {
     private final double value;
+    public static final NumberValue ZERO = new NumberValue(0);
 
     public NumberValue(double value) {
         this.value = value;

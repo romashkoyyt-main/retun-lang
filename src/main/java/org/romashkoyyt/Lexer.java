@@ -237,18 +237,6 @@ public class Lexer {
         } else if (stringBuilder.toString().equals("include")) {
             tokens.add(new Token(TokenType.INCLUDE));
             return;
-        } else if (stringBuilder.toString().equals("closed")) {
-            tokens.add(new Token(TokenType.CLOSED));
-            return;
-        } else if (stringBuilder.toString().equals("static")) {
-            tokens.add(new Token(TokenType.STATIC));
-            return;
-        } else if (stringBuilder.toString().equals("class")) {
-            tokens.add(new Token(TokenType.CLASS));
-            return;
-        } else if (stringBuilder.toString().equals("obj")) {
-            tokens.add(new Token(TokenType.OBJ));
-            return;
         } else if (stringBuilder.toString().equals("tab")) {
             tokens.add(new Token(TokenType.TAB));
             return;
