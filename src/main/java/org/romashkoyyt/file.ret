@@ -1,17 +1,17 @@
-/* -- GUESS NUMBER GAME -- */
+/* PRINT RANDOM BYTE */
 
-var input = toNumber(read("Enter number: "));
-var answer = rand(1, 100);
-
-while (true) {
-    if (input > answer) {
-        print("Number is lower than it.");
-    } else if (input < answer) {
-        print("Number is greater than it.");
-    } else if (input == answer) {
-        break;
-    }
-    input = toNumber(read("Enter number: "));
-}
-
-print("You win!");
+var
+         string         =""
+;
+    for
+        (var i     =1to
+ 8
+ ){string               =string
+                +rand  (0  ,(1
+            +(  ((
+  0 +(-
+                1+ 1)
+  )                         ))
+  )     );}
+print       (
+       string)        ;

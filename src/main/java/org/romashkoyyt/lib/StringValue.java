@@ -9,11 +9,6 @@ public class StringValue implements Value {
 
     @Override
     public String asString() {
-        try {
-            if (Double.parseDouble(value) == (int)Double.parseDouble(value)) {
-                return Integer.toString((int)Double.parseDouble(value));
-            }
-        } catch (NumberFormatException _) {}
         return value;
     }
 

@@ -3,18 +3,14 @@ package org.romashkoyyt;
 public enum TokenType {
     NUMBER,
     HEX,
+    BIN,
     WORD,
     STRING,
     TRUE,
     FALSE,
 
-    PRINT,
-    READ,
-    WRITE,
-    TONUM,
-    TOSTR,
-    FORMAT,
-    RAND,
+    /*
+    RAND,*/
 
     PLUS,
     MINUS,

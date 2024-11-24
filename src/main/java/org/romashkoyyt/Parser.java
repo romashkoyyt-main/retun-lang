@@ -26,16 +26,18 @@ public class Parser {
         return statements;
     }
 
+    private FunctionalExpression function(String name) {
+        final FunctionalExpression function = new FunctionalExpression(name);
+
+        while (!match(TokenType.RPAREN)) {
+            function.addArgument(expression());
+            match(TokenType.COM);
+        }
+
+        return function;
+    }
+
     private Statement statement() {
-        if (match(TokenType.PRINT)) {
-            return printStatement();
-        }
-        if (match(TokenType.WRITE)) {
-            return writeStatement();
-        }
-        if (peek().getType() == TokenType.WORD) {
-            return reassigmentStatement();
-        }
         if (match(TokenType.IF)) {
             return ifStatement();
         }
@@ -59,6 +61,16 @@ public class Parser {
             consume(TokenType.SEMICOLON);
             return new ContinueStatement();
         }
+        if (peek().getType() == TokenType.WORD) {
+            final String name = peek().getValue();
+            consume(TokenType.WORD);
+            if (match(TokenType.LPAREN)) {
+                FunctionalExpression expr = function(name);
+                consume(TokenType.SEMICOLON);
+                return new FunctionStatement(expr);
+            }
+            return reassigmentStatement(name);
+        }
         return assignmentStatement();
     }
 
@@ -77,6 +89,7 @@ public class Parser {
     }
 
     private Statement forStatement() {
+        match(TokenType.LPAREN);
         consume(TokenType.VAR);
         String name = peek().getValue();
         consume(TokenType.WORD);
@@ -89,6 +102,8 @@ public class Parser {
         if (match(TokenType.WITH)) {
             incr = statement();
         }
+
+        match(TokenType.RPAREN);
 
         Statement statement = statementOrBlock();
         return new ForStatement(name, expr1, expr2, incr, statement);
@@ -120,9 +135,7 @@ public class Parser {
         return new IfElseStatement(expr, statement);
     }
 
-    private Statement reassigmentStatement() {
-        String name = peek().getValue();
-        consume(TokenType.WORD);
+    private Statement reassigmentStatement(String name) {
         if (match(TokenType.PLUS)) {
             consume(TokenType.PLUS);
             consume(TokenType.SEMICOLON);
@@ -139,36 +152,6 @@ public class Parser {
         return new ReAssignmentStatement(name, expr);
     }
 
-    private Statement printStatement() {
-        consume(TokenType.LPAREN);
-        Expression expr = expression();
-        while (true) {
-            if (match(TokenType.COM)) {
-                expr = new BinaryExpression(expr, expression(), ',');
-                continue;
-            }
-            break;
-        }
-        consume(TokenType.RPAREN);
-        consume(TokenType.SEMICOLON);
-        return new PrintStatement(expr);
-    }
-
-    private Statement writeStatement() {
-        consume(TokenType.LPAREN);
-        Expression expr = expression();
-        while (true) {
-            if (match(TokenType.COM)) {
-                expr = new BinaryExpression(expr, expression(), '&');
-                continue;
-            }
-            break;
-        }
-        consume(TokenType.RPAREN);
-        consume(TokenType.SEMICOLON);
-        return new WriteStatement(expr);
-    }
-
     private Statement assignmentStatement() {
         if (match(TokenType.VAR)) {
             String name = peek().getValue();
@@ -179,7 +162,7 @@ public class Parser {
             return new AssignStatement(name, expr);
         }
 
-        throw new RuntimeException("Unknown statement");
+        throw new RuntimeException("Unknown statement: " + peek().getType());
     }
 
     private Expression expression() {
@@ -327,13 +310,21 @@ public class Parser {
         if (match(TokenType.HEX)) {
             return new ValueExpression(new NumberValue(Long.parseLong(current.getValue(), 16)));
         }
+        if (match(TokenType.BIN)) {
+            return new ValueExpression(new NumberValue(Integer.parseInt(current.getValue(), 2)));
+        }
+        if (peek().getType() == TokenType.WORD) {
+            final String name = current.getValue();
+            consume(TokenType.WORD);
+            if (match(TokenType.LPAREN)) {
+                return function(name);
+            }
+            return new VariableExpression(name);
+        }
         if (match(TokenType.LPAREN)) {
             Expression expr = expression();
             consume(TokenType.RPAREN);
             return expr;
-        }
-        if (match(TokenType.WORD)) {
-            return new VariableExpression(current.getValue());
         }
         if (match(TokenType.STRING)) {
             return new ValueExpression(new StringValue(current.getValue()));
@@ -344,56 +335,7 @@ public class Parser {
         if (match(TokenType.FALSE)) {
             return new ValueExpression(new BooleanValue(false));
         }
-        if (match(TokenType.READ)) {
-            consume(TokenType.LPAREN);
-            Expression expr = new ValueExpression(new StringValue(""));
-            if (peek().getType() != TokenType.RPAREN) {
-                expr = expression();
-            }
-            consume(TokenType.RPAREN);
 
-            return new ReadExpression(expr);
-        }
-        if (match(TokenType.FORMAT)) {
-            consume(TokenType.LPAREN);
-            ArrayList<Expression> values = new ArrayList<>();
-            Expression expr1 = expression();
-
-            while (true) {
-                if (match(TokenType.COM)) {
-                    values.add(expression());
-                    continue;
-                }
-                break;
-            }
-
-            consume(TokenType.RPAREN);
-
-            return new FormatExpression(expr1, values);
-        }
-        if (match(TokenType.TONUM)) {
-            consume(TokenType.LPAREN);
-            Expression expr = expression();
-            consume(TokenType.RPAREN);
-
-            return new ToNumberExpression(expr);
-        }
-        if (match(TokenType.TOSTR)) {
-            consume(TokenType.LPAREN);
-            Expression expr = expression();
-            consume(TokenType.RPAREN);
-
-            return new ToStringExpression(expr);
-        }
-        if (match(TokenType.RAND)) {
-            consume(TokenType.LPAREN);
-            Expression expr1 = expression();
-            consume(TokenType.COM);
-            Expression expr2 = expression();
-            consume(TokenType.RPAREN);
-
-            return new RandExpression(expr1, expr2);
-        }
         if (match(TokenType.NOT)) {
             Expression expr = expression();
             return new ConditionalExpression(expr, new ValueExpression(new BooleanValue(false)), "==");

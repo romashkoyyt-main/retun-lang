@@ -22,9 +22,13 @@ public class Lexer {
 
             if (Character.isDigit(current)) {
                 if (current == '0') {
-                    if (next() == 'x') {
+                    char c = next();
+                    if (c == 'x') {
                         next();
                         tokenizeHexNumber();
+                    } else if (c == 'b') {
+                        next();
+                        tokenizeBinaryNumber();
                     } else {
                         back();
                         tokenizeNumber();
@@ -125,6 +129,19 @@ public class Lexer {
         return tokens;
     }
 
+    private void tokenizeBinaryNumber() {
+        StringBuilder stringBuilder = new StringBuilder();
+        char current = peek();
+
+        while (true) {
+            if (current != '0' && current != '1') break;
+            stringBuilder.append(current);
+            current = next();
+        }
+
+        tokens.add(new Token(TokenType.BIN, stringBuilder.toString()));
+    }
+
     private void tokenizeComment() {
         StringBuilder stringBuilder = new StringBuilder();
         char current = peek();
@@ -211,12 +228,6 @@ public class Lexer {
         } else if (stringBuilder.toString().equals("foreach")) {
             tokens.add(new Token(TokenType.FOREACH));
             return;
-        } else if (stringBuilder.toString().equals("print")) {
-            tokens.add(new Token(TokenType.PRINT));
-            return;
-        } else if (stringBuilder.toString().equals("read")) {
-            tokens.add(new Token(TokenType.READ));
-            return;
         } else if (stringBuilder.toString().equals("func")) {
             tokens.add(new Token(TokenType.FUNC));
             return;
@@ -244,26 +255,11 @@ public class Lexer {
         } else if (stringBuilder.toString().equals("while")) {
             tokens.add(new Token(TokenType.WHILE));
             return;
-        } else if (stringBuilder.toString().equals("write")) {
-            tokens.add(new Token(TokenType.WRITE));
-            return;
-        } else if (stringBuilder.toString().equals("toNumber")) {
-            tokens.add(new Token(TokenType.TONUM));
-            return;
-        } else if (stringBuilder.toString().equals("toString")) {
-            tokens.add(new Token(TokenType.TOSTR));
-            return;
-        } else if (stringBuilder.toString().equals("format")) {
-            tokens.add(new Token(TokenType.FORMAT));
-            return;
         } else if (stringBuilder.toString().equals("true")) {
             tokens.add(new Token(TokenType.TRUE));
             return;
         } else if (stringBuilder.toString().equals("false")) {
             tokens.add(new Token(TokenType.FALSE));
-            return;
-        } else if (stringBuilder.toString().equals("rand")) {
-            tokens.add(new Token(TokenType.RAND));
             return;
         } else if (stringBuilder.toString().equals("and")) {
             tokens.add(new Token(TokenType.ANDAND));
